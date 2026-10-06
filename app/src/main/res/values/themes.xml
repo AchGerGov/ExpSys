@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.HardwareExpert" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">#001F3F</item>
+        <item name="android:statusBarColor">#00132B</item>
+        <item name="android:navigationBarColor">#00132B</item>
+    </style>
+</resources>
