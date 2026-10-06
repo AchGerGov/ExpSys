@@ -1,0 +1,5 @@
+# Путь к SDK (заполняется Android Studio автоматически)
+sdk.dir=/path/to/Android/Sdk
+
+# Ключ API DeepSeek (https://platform.deepseek.com/)
+LLM_API_KEY=sk-8df6595604a64e9d98d0ace3d1b9377f
