@@ -59,8 +59,8 @@ UI (Compose)  →  ExpertSystem (логика)  →  rules.json + Room
 1. Установить **JDK 17** (Adoptium Temurin), **Android SDK** (API 34).
 2. Клонировать репозиторий:
    ```bash
-   git clone https://github.com/ваш-логин/HardwareExpert.git
-   cd HardwareExpert
+   git clone https://github.com/ваш-логин/ExpSys.git
+   cd ExpSys
    ```
 3. Создать `local.properties` со строкой:
    ```
