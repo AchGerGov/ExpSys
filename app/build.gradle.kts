@@ -1,8 +1,16 @@
+﻿import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
+
+val localProps = Properties().apply {
+    val f = rootProject.file("local.properties")
+    if (f.exists()) f.inputStream().use { load(it) }
+}
+val llmApiKey: String = localProps.getProperty("LLM_API_KEY") ?: ""
 
 android {
     namespace = "com.example.hardwareexpert"
@@ -14,13 +22,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
-        // Ключ LLM подтягиваем из local.properties
-        val props = java.util.Properties()
-        val file = rootProject.file("local.properties")
-        if (file.exists()) props.load(file.inputStream())
-        val key = props.getProperty("LLM_API_KEY") ?: ""
-        buildConfigField("String", "LLM_API_KEY", "\"$key\"")
+        buildConfigField("String", "LLM_API_KEY", "\"$llmApiKey\"")
     }
 
     buildFeatures {

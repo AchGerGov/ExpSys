@@ -1,4 +1,4 @@
-package com.example.hardwareexpert
+﻿package com.example.hardwareexpert
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -22,77 +22,80 @@ import com.example.hardwareexpert.ui.*
 import kotlinx.coroutines.launch
 
 sealed interface Screen {
-    data object Home : Screen
-    data class Result(val answer: Answer) : Screen
+    data object DeviceSelection : Screen
+    data class Home(val device: String) : Screen
+    data class Result(val answers: List<Answer>, val fromHistory: Boolean = false) : Screen 
     data object History : Screen
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val expert = ExpertSystem(applicationContext)
         val dao = AppDatabase.get(applicationContext).historyDao()
 
         setContent {
             HardwareExpertTheme {
-                var screen by remember { mutableStateOf<Screen>(Screen.Home) }
+                var screen by remember { mutableStateOf<Screen>(Screen.DeviceSelection) }
                 val scope = rememberCoroutineScope()
 
                 Scaffold(
                     containerColor = NavyBlue,
                     topBar = {
                         TopAppBar(
-                            title = {
-                                Text(
-                                    "Hardware Expert",
-                                    fontFamily = Consolas
-                                )
-                            },
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = NavyDeep,
-                                titleContentColor = AccentCyan
-                            )
+                            title = { Text("Hardware Expert", fontFamily = Consolas) },
+                            colors = TopAppBarDefaults.topAppBarColors(containerColor = NavyDeep, titleContentColor = AccentCyan)
                         )
                     }
                 ) { padding ->
-                    Box(
-                        Modifier
-                            .padding(padding)
-                            .fillMaxSize()
-                            .background(NavyBlue)
-                    ) {
+                    Box(Modifier.padding(padding).fillMaxSize().background(NavyBlue)) {
                         when (val s = screen) {
-
-                            Screen.Home -> HomeScreen(
-                                expert = expert,
-                                onDiagnose = { symptoms ->
-                                    scope.launch {
-                                        val answer = expert.diagnose(symptoms)
-                                        dao.insert(
-                                            HistoryEntity(
-                                                query = symptoms.joinToString(", "),
-                                                cause = answer.cause,
-                                                advice = answer.advice,
-                                                source = answer.source
-                                            )
-                                        )
-                                        screen = Screen.Result(answer)
-                                    }
-                                },
+                            Screen.DeviceSelection -> DeviceSelectionScreen(
+                                onDeviceSelected = { device -> screen = Screen.Home(device) },
                                 onHistory = { screen = Screen.History }
                             )
-
-                            is Screen.Result -> ResultScreen(
-                                answer = s.answer,
-                                onBack = { screen = Screen.Home }
+                            
+                            is Screen.Home -> HomeScreen(
+                                expert = expert,
+                                deviceType = s.device,
+                                onDiagnose = { brand, symptoms ->
+                                    scope.launch {
+                                        val answers = expert.diagnose(s.device, brand, symptoms)
+                                        dao.insert(HistoryEntity(
+                                            query = symptoms.joinToString(", "),
+                                            cause = answers.firstOrNull()?.cause ?: "Не определено",
+                                            advice = answers.joinToString("\n\n") { it.advice },
+                                            source = "База знаний"
+                                        ))
+                                        screen = Screen.Result(answers)
+                                    }
+                                },
+                                onBack = { screen = Screen.DeviceSelection }
                             )
-
+                            
+                            is Screen.Result -> ResultScreen(
+                                answers = s.answers,
+                                onBack = { 
+                                    if (s.fromHistory) {
+                                        screen = Screen.History
+                                    } else {
+                                        screen = Screen.DeviceSelection
+                                    }
+                                }
+                            )
+                            
                             Screen.History -> HistoryScreen(
                                 dao = dao,
-                                onBack = { screen = Screen.Home }
+                                onBack = { screen = Screen.DeviceSelection },
+                                onItemClick = { historyEntity ->
+                                    val answer = Answer(
+                                        cause = historyEntity.cause,
+                                        advice = historyEntity.advice,
+                                        source = historyEntity.source
+                                    )
+                                    screen = Screen.Result(listOf(answer), fromHistory = true)
+                                }
                             )
                         }
                     }

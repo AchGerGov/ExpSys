@@ -1,0 +1,42 @@
+﻿<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    
+    <!-- Основа микрочипа -->
+    <path
+        android:fillColor="#00132B"
+        android:strokeColor="#7FDBFF"
+        android:strokeWidth="3"
+        android:pathData="M36,36 h36 a4,4 0 0 1 4,4 v28 a4,4 0 0 1 -4,4 h-36 a4,4 0 0 1 -4,-4 v-28 a4,4 0 0 1 4,-4 z" />
+
+    <!-- Ножки сверху -->
+    <path android:fillColor="#7FDBFF" android:pathData="M42,28 h4 v8 h-4 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M52,28 h4 v8 h-4 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M62,28 h4 v8 h-4 z" />
+
+    <!-- Ножки снизу -->
+    <path android:fillColor="#7FDBFF" android:pathData="M42,72 h4 v8 h-4 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M52,72 h4 v8 h-4 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M62,72 h4 v8 h-4 z" />
+
+    <!-- Ножки слева -->
+    <path android:fillColor="#7FDBFF" android:pathData="M28,42 h8 v4 h-8 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M28,52 h8 v4 h-8 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M28,62 h8 v4 h-8 z" />
+
+    <!-- Ножки справа -->
+    <path android:fillColor="#7FDBFF" android:pathData="M72,42 h8 v4 h-8 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M72,52 h8 v4 h-8 z" />
+    <path android:fillColor="#7FDBFF" android:pathData="M72,62 h8 v4 h-8 z" />
+
+    <!-- Линия кардиограммы (диагностика) -->
+    <path
+        android:strokeColor="#7FDBFF"
+        android:strokeWidth="3"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:fillColor="#00000000"
+        android:pathData="M42,54 L48,54 L52,42 L58,66 L62,54 L66,54" />
+</vector>
